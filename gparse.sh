@@ -32,10 +32,5 @@ if [ ! -f "${PARSE_TMP}" ]; then lynx -dump $URI > ${PARSE_TMP}; fi
 sed 's/http/\^http/g' ${PARSE_TMP} | tr -s "^" "\n" | grep http| sed 's/\ .*//g' > ${PARSE_TMP2}
 sed '/google.com/d' ${PARSE_TMP2} > ${URLS_TMP}
 
-#echo "SUCCESS: Extracted `wc -l urls` and listed them in '`pwd`/urls' file for reference."
-#echo ""
 cat ${URLS_TMP}
-#echo ""
-
-#EOF
 
