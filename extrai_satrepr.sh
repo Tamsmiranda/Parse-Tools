@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Keywords file
+FILE_TMP="/var/tmp/file.${BASEFILE}"
 KEYWORDS="./keywords.txt"
+BLACKLIST="./black.lst"
+WHITELIST="./white.lst"
 URLS="./data/urls.txt"
 DOMAINS="./data/domains.txt"
 
@@ -13,7 +16,7 @@ if [ ! -f "${KEYWORDS}" ]; then
 		./gparse.sh ${KEYWORD} >> ${URLS}
 	done
 else
-	LINES=`cat keywords.txt | wc -l`
+	LINES=`cat ${KEYWORDS} | wc -l`
 	cat ${KEYWORDS} | while read KEYWORD ; do
 		LINE=$((LINE+1))
 		echo -e "Obtendo urls para (${LINE}/${LINES}):${KEYWORD}\n"
@@ -21,6 +24,15 @@ else
 	done
 fi
 cat ${URLS} | awk '{gsub("http://|/.*","")}1' | awk '!($0 in a) {a[$0];print}' | sort > ${DOMAINS}
+
+# black list filter
+LINES=`cat ${BLACKLIST} | wc -l`
+cat ${BLACKLIST} | while read BLACKITEM ; do
+	LINE=$((LINE+1))
+	echo -e "Removendo dominio (${LINE}/${LINES}):${BLACKITEM}\n"
+	cat ${DOMAINS} | grep -v ${BLACKITEM} > ${FILE_TMP}
+	mv ${FILE_TMP} ${DOMAINS}
+done
 
 exit 0
 
