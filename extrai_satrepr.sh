@@ -13,8 +13,10 @@ if [ ! -f "${KEYWORDS}" ]; then
 		./gparse.sh ${KEYWORD} >> ${URLS}
 	done
 else
+	LINES=`cat keywords.txt | wc -l`
 	cat ${KEYWORDS} | while read KEYWORD ; do
-		echo -e "Obtendo urls para:${KEYWORD}\n"
+		LINE=$((LINE+1))
+		echo -e "Obtendo urls para (${LINE}/${LINES}):${KEYWORD}\n"
 		./gparse.sh ${KEYWORD} >> ${URLS}
 	done
 fi
