@@ -15,7 +15,10 @@ PARSE_TMP="/var/tmp/parse.$$"
 PARSE_TMP2="/var/tmp/parse2.$$"
 URLS_TMP="/var/tmp/parse.$$"
 
-URL="http://google.com/search?hl=pt-BR&safe=off&q="
+# Set Google default language
+LANGUAGE="pt-BR"
+
+URL="http://google.com/search?hl=$LANGUAGE&safe=off&q="
 STRING=`echo $SEARCH | sed 's/ /%20/g'`
 URI="$URL%22$STRING%22"
 
