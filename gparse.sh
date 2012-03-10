@@ -18,7 +18,9 @@ URLS_TMP="/var/tmp/parse.$$"
 # Set Google default language
 LANGUAGE="pt-BR"
 
+# Set Google Url
 URL="http://google.com/search?hl=$LANGUAGE&safe=off&q="
+
 STRING=`echo $SEARCH | sed 's/ /%20/g'`
 URI="$URL%22$STRING%22"
 
