@@ -5,12 +5,12 @@
 WHOIS_SERVER="whois.registro.br"
 
 # Place to stash temporary files
-WHOIS_TMP="/var/tmp/whois.$$"
+WHOIS_TMP="/var/tmp/whois.${1}"
 
 
 #whois=`whois -h whois.registro.br --verbose $1`
 #${WHOIS} -h ${WHOIS_SERVER} "=${1}" > ${WHOIS_TMP}
-whois -h ${WHOIS_SERVER} ${1} > ${WHOIS_TMP}
+if [ ! -f "${WHOIS_TMP}" ]; then whois -h ${WHOIS_SERVER} ${1} > ${WHOIS_TMP}; fi
 
 # Get Registrar Vars
 DOMAIN=`cat ${WHOIS_TMP} | awk '/domain:/ { print $NF }'`
