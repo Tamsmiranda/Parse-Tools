@@ -8,7 +8,12 @@ WHITELIST="./white.lst"
 URLS="./data/urls.txt"
 DOMAINS="./data/domains.txt"
 
-if [ ! -f "${URLS}" ]; then touch ${URLS}; fi
+if [ ! -f "${URLS}" ]; then 
+	touch ${URLS};
+else
+	rm ${URLS}
+	touch ${URLS};
+fi
 
 if [ ! -f "${KEYWORDS}" ]; then
 	for KEYWORD in $@; do
@@ -33,6 +38,15 @@ cat ${BLACKLIST} | while read BLACKITEM ; do
 	cat ${DOMAINS} | grep -v ${BLACKITEM} > ${FILE_TMP}
 	mv ${FILE_TMP} ${DOMAINS}
 done
+
+# white list filter
+LINES=`cat ${WHITELIST} | wc -l`
+cat ${WHITELIST} | while read WHITEITEM ; do
+	LINE=$((LINE+1))
+	echo -e "Permitindo dominios contendo (${LINE}/${LINES}):${WHITEITEM}\n"
+	cat ${DOMAINS} | grep ${WHITEITEM} >> ${FILE_TMP}
+done
+cat ${FILE_TMP} | awk '!($0 in a) {a[$0];print}' | sort >  ${DOMAINS}
 
 exit 0
 
