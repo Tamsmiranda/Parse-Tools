@@ -10,21 +10,25 @@ else
  SEARCH=$@
 fi
 
+# Base temporary file name
+BASEFILE=`echo $SEARCH | sed 's/ /_/g'`
+
 # Place to stash temporary files
-PARSE_TMP="/var/tmp/parse.$$"
-PARSE_TMP2="/var/tmp/parse2.$$"
-URLS_TMP="/var/tmp/parse.$$"
+PARSE_TMP="/var/tmp/parse.${BASEFILE}"
+PARSE_TMP2="/var/tmp/parse2.${BASEFILE}"
+URLS_TMP="/var/tmp/parse.${BASEFILE}"
 
 # Set Google default language
 LANGUAGE="pt-BR"
 
 # Set Google Url
-URL="http://google.com/search?hl=$LANGUAGE&safe=off&q="
+URL="http://google.com/search?hl=${LANGUAGE}&safe=off&q="
 
-STRING=`echo $SEARCH | sed 's/ /%20/g'`
-URI="$URL%22$STRING%22"
+QUERIES=`echo $SEARCH | sed 's/ /%20/g'`
+URI="$URL%22$QUERIES%22"
 
-lynx -dump $URI > ${PARSE_TMP}
+if [ ! -f "${PARSE_TMP}" ]; then lynx -dump $URI > ${PARSE_TMP}; fi
+
 sed 's/http/\^http/g' ${PARSE_TMP} | tr -s "^" "\n" | grep http| sed 's/\ .*//g' > ${PARSE_TMP2}
 sed '/google.com/d' ${PARSE_TMP2} > ${URLS_TMP}
 
