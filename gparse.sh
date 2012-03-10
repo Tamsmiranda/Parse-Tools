@@ -10,19 +10,22 @@ else
  SEARCH=$@
 fi
 
+# Place to stash temporary files
+PARSE_TMP="/var/tmp/parse.$$"
+PARSE_TMP2="/var/tmp/parse2.$$"
+URLS_TMP="/var/tmp/parse.$$"
+
 URL="http://google.com/search?hl=pt-BR&safe=off&q="
 STRING=`echo $SEARCH | sed 's/ /%20/g'`
 URI="$URL%22$STRING%22"
 
-lynx -dump $URI > gone.tmp
-sed 's/http/\^http/g' gone.tmp | tr -s "^" "\n" | grep http| sed 's/\ .*//g' > gtwo.tmp
-rm gone.tmp
-sed '/google.com/d' gtwo.tmp > urls
-rm gtwo.tmp
+lynx -dump $URI > ${PARSE_TMP}
+sed 's/http/\^http/g' ${PARSE_TMP} | tr -s "^" "\n" | grep http| sed 's/\ .*//g' > ${PARSE_TMP2}
+sed '/google.com/d' ${PARSE_TMP2} > ${URLS_TMP}
 
 #echo "SUCCESS: Extracted `wc -l urls` and listed them in '`pwd`/urls' file for reference."
 #echo ""
-cat urls
+cat ${URLS_TMP}
 #echo ""
 
 #EOF
